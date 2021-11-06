@@ -1,3 +1,3 @@
 # telegram-bot
 
-Ссылка на бота: [Pbot](t.me/Pracctical_bot)
+Ссылка на бота: [Pbot](https://web.telegram.org/z/#2094560790)
