@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebHooks", "WebHooks\WebHooks.csproj", "{A42361D9-A9A1-41FF-8EA1-A02B2807962B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "telegram-bot", "telegram-bot\telegram-bot.csproj", "{017BEFC8-B2F6-4EB0-A0B1-5F01A2234BB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A42361D9-A9A1-41FF-8EA1-A02B2807962B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A42361D9-A9A1-41FF-8EA1-A02B2807962B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A42361D9-A9A1-41FF-8EA1-A02B2807962B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A42361D9-A9A1-41FF-8EA1-A02B2807962B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{017BEFC8-B2F6-4EB0-A0B1-5F01A2234BB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{017BEFC8-B2F6-4EB0-A0B1-5F01A2234BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{017BEFC8-B2F6-4EB0-A0B1-5F01A2234BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{017BEFC8-B2F6-4EB0-A0B1-5F01A2234BB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {3B42A5D1-E96E-431D-A38E-4370EBFFF828}
+		SolutionGuid = {2096DCD2-BEF1-4A36-B74B-1554E63CB61A}
 	EndGlobalSection
 EndGlobal
