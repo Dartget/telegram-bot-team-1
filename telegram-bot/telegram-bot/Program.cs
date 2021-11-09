@@ -14,12 +14,9 @@ namespace telegram_bot
     {
         public static void Main(string[] args)
         {
+            // example
             // @Pracctical_bot token : 2094560790:AAGcEq2UvuXGNCtNtdV6C-t3b6-y6W-X9AM
-            string ngrokAddress = "https://2c38-178-69-38-10.ngrok.io"; 
-            string BotToken = "2094560790:AAGcEq2UvuXGNCtNtdV6C-t3b6-y6W-X9AM";
-
-            deleteWebHook(BotToken);
-            setWebHook(ngrokAddress, BotToken);
+            // ngrok address = "https://40f6-178-69-38-10.ngrok.io";
 
             CreateHostBuilder(args).Build().Run();
         }
@@ -31,21 +28,6 @@ namespace telegram_bot
                     webBuilder.UseStartup<Startup>();
                 });
 
-        // funs for dev
-        public async static void setWebHook(string ngrokAddress, string BotToken)
-        {
-            var client = new HttpClient();
-            var uri = new Uri("https://api.telegram.org/bot" + BotToken + "/setWebhook?url=" + ngrokAddress + "/api/BotController");
-
-            await client.GetAsync(uri);
-        }
-
-        public async static void deleteWebHook(string BotToken)
-        {
-            var client = new HttpClient();
-            var uri = new Uri("https://api.telegram.org/bot" + BotToken + "/deleteWebhook");
-
-            await client.GetAsync(uri);
-        }
+        
     }
 }
