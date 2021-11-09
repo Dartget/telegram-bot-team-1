@@ -12,6 +12,7 @@
         public message_chat chat { get; set; }
         public int date { get; set; }
         public string text { get; set; }
+        public message_entities[] entities { get; set; }
     }
     public class message_from
     {
@@ -26,6 +27,12 @@
         public int id { get; set; }
         public string first_name { get; set; }
         public string username { get; set; }
+        public string type { get; set; }
+    }
+    public class message_entities
+    {
+        public int offset { get; set; }
+        public int length { get; set; }
         public string type { get; set; }
     }
 }

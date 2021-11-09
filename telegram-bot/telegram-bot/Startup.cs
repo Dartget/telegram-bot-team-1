@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using telegram_bot.Services;
+using telegram_bot.WebHookSetup;
 
 namespace telegram_bot
 {
@@ -25,6 +23,14 @@ namespace telegram_bot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHostedService<ConfigureWebhook>();
+
+            services.AddHttpClient("telWebHook")
+                    .AddTypedClient<IWebHookClient>(client
+                        => new WebHookClient(BotConfig.BotToken, client));
+
+            services.AddScoped<HandleUpdateService>();
+
             services
                 .AddControllers()
                 .AddNewtonsoftJson();
@@ -43,10 +49,10 @@ namespace telegram_bot
 
             app.UseEndpoints(endpoints =>
             {
-                //var token = BotConfig.BotToken;
-                //endpoints.MapControllerRoute(name: "tgwebhook",
-                //                             pattern: $"bot/{token}",
-                //                             new { controller = "BotController", action = "Post" });
+                var token = BotConfig.BotToken;
+                endpoints.MapControllerRoute(name: "telWebHook",
+                                             pattern: $"bot/{token}",
+                                             new { controller = "BotController", action = "Post" });
                 endpoints.MapControllers();
             });
         }
