@@ -20,7 +20,7 @@ namespace Movie
 
     public class IMDBAPIClient
     {
-        public async static MovieSearchResult getMovieIdByTitle(string rapidApiKey, string title)
+        public async static MovieSearchResults getMovieIdByTitle(string rapidApiKey, string title)
         {
             var client = new HttpClient();
 
@@ -31,16 +31,10 @@ namespace Movie
             var response = await client.GetAsync(uri);
 
             JObject s = JObject.Parse(response);
-            MovieSearchResults results = JsonConvert.DeserializeObject<Account>(s);
+            MovieSearchResults results = JsonConvert.DeserializeObject<MovieSearchResults>(s);
             Console.WriteLine(results.results[0].imdb_id);
-        }
 
-        public async static void setWebHook(string ngrokAddress, string BotToken)
-        {
-            var client = new HttpClient();
-            var uri = new Uri("https://api.telegram.org/bot" + BotToken + "/setWebhook?url=" + ngrokAddress + "/api/BotController");
-
-            await client.GetAsync(uri);
+            return MovieSearchResults;
         }
     }
 }
