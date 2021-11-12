@@ -13,7 +13,6 @@ namespace telegram_bot.WebHookSetup
         private readonly ILogger<ConfigureWebhook> _logger;
         private readonly IServiceProvider _services;
         private readonly BotConfiguration _botConfig;
-        private readonly string _ngrokAddress;
 
         public ConfigureWebhook(ILogger<ConfigureWebhook> logger,
                                 IServiceProvider serviceProvider,

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using telegram_bot.Services.Weather;
 using telegram_bot.WebHookSetup;
 
 namespace telegram_bot.Services
@@ -18,10 +19,14 @@ namespace telegram_bot.Services
 
         public async Task HandlerAsync(Update update)
         {
-            var handler = update.message.text switch
+            string message = update.message.text;
+            string[] word = message.Split(' ');
+
+            var handler = word[0] switch
             {
                 "/one" => new Context(new Command()),
                 "/two" => new Context(new Command()),
+                "/weather" => new Context(new WeatherService()),
                 _ => new Context(new IncorrectMessage())
             };
 
