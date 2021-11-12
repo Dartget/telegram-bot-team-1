@@ -25,11 +25,11 @@ namespace telegram_bot
         {
             services.AddHostedService<ConfigureWebhook>();
 
-            services.AddHttpClient("telWebHook")
-                    .AddTypedClient<IWebHookClient>(client
-                        => new WebHookClient(BotConfig.BotToken, client));
+            services.AddHttpClient<IWebHookClient, WebHookClient>();
+            services.AddSingleton(BotConfig);
 
             services.AddScoped<HandleUpdateService>();
+            services.AddScoped<IWebHookClient, WebHookClient>();
 
             services
                 .AddControllers()

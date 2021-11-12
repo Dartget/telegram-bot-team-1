@@ -6,14 +6,6 @@ using System.Threading.Tasks;
 
 namespace telegram_bot.WebHookSetup
 {
-    public interface IWebHookClient
-    {
-        // funs for dev
-        Task SetWebhook(string url);
-        Task DeleteWebhook();
-        Task SendTextMessage(int chatId, string message);
-    }
-
     public class WebHookClient : IWebHookClient
     {
         private const string BaseUrl = "https://api.telegram.org/bot";
@@ -24,9 +16,9 @@ namespace telegram_bot.WebHookSetup
 
         private readonly HttpClient _httpClient;
 
-        public WebHookClient(string token, HttpClient httpClient = null)
+        public WebHookClient(BotConfiguration config, HttpClient httpClient = null)
         {
-            _token = token;
+            _token = config.BotToken;
             _baseRequestUrl = $"{BaseUrl}{_token}";
             _httpClient = httpClient ?? new HttpClient();
         }

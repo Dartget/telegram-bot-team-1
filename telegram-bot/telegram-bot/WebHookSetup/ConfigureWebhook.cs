@@ -29,7 +29,7 @@ namespace telegram_bot.WebHookSetup
             using var scope = _services.CreateScope();
             var botClient = scope.ServiceProvider.GetRequiredService<IWebHookClient>();
 
-            var webhookAddress = @$"{_botConfig.HostAddress}{_botConfig.BotToken}/setWebhook?url={_botConfig.NgrokAddress}/api/BotController";
+            var webhookAddress = @$"{_botConfig.HostAddress}{_botConfig.BotToken}/setWebhook?url={_botConfig.UrlPath}/api/BotController";
             _logger.LogInformation("Setting webhook: ", webhookAddress);
             await botClient.SetWebhook(url: webhookAddress);
         }
