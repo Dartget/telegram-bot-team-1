@@ -8,7 +8,7 @@ namespace telegram_bot.WebHookSetup
     {
 		private static Singleton _instance;
 		private readonly HttpClient _client = new();
-		public static Singleton Instance
+		private static Singleton Instance
 		{
 			get
 			{
