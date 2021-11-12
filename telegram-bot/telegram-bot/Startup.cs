@@ -25,16 +25,21 @@ namespace telegram_bot
         {
             services.AddHostedService<ConfigureWebhook>();
 
-            services.AddHttpClient<IWebHookClient, WebHookClient>();
-            services.AddSingleton(BotConfig);
+			//services.AddHttpClient("telWebHook")
+			//        .AddTypedClient<IWebHookClient>(client
+			//            => new WebHookClient(BotConfig, client));
 
-            services.AddScoped<HandleUpdateService>();
-            services.AddScoped<IWebHookClient, WebHookClient>();
+			services.AddHttpClient<IWebHookClient, WebHookClient>();
 
-            services
-                .AddControllers()
-                .AddNewtonsoftJson();
-        }
+			services.AddScoped<HandleUpdateService>();
+
+			services.AddSingleton(BotConfig);
+			services.AddSingleton<Singleton>();
+
+			services
+				.AddControllers()
+				.AddNewtonsoftJson();
+		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -49,10 +54,10 @@ namespace telegram_bot
 
             app.UseEndpoints(endpoints =>
             {
-                var token = BotConfig.BotToken;
-                endpoints.MapControllerRoute(name: "telWebHook",
-                                             pattern: $"bot/{token}",
-                                             new { controller = "BotController", action = "Post" });
+                //var token = BotConfig.BotToken;
+                //endpoints.MapControllerRoute(name: "telWebHook",
+                //                             pattern: $"bot/{token}",
+                //                             new { controller = "BotController", action = "Post" });
                 endpoints.MapControllers();
             });
         }

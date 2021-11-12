@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using telegram_bot.Types;
 using telegram_bot.WebHookSetup;
 
 namespace telegram_bot.Services

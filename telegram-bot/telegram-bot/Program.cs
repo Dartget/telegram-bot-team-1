@@ -14,10 +14,6 @@ namespace telegram_bot
     {
         public static void Main(string[] args)
         {
-            // example
-            // @Pracctical_bot token : 2094560790:AAGcEq2UvuXGNCtNtdV6C-t3b6-y6W-X9AM
-            // ngrok address = "https://40f6-178-69-38-10.ngrok.io";
-
             CreateHostBuilder(args).Build().Run();
         }
 
