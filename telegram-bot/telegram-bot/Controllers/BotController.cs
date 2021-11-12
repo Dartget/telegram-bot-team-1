@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using telegram_bot.Services;
-using telegram_bot.Types;
+using TelegramBot.Services;
+using TelegramBot.Types;
 
-namespace telegram_bot.Controllers
+namespace TelegramBot.Controllers
 {
     [Route("api/BotController")]
     [ApiController]

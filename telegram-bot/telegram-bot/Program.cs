@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace telegram_bot
+namespace TelegramBot
 {
     public class Program
     {

@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace telegram_bot.WebHookSetup
+namespace TelegramBot.WebHookSetup
 {
 	public class WebHookClient : IWebHookClient
 	{
@@ -15,10 +15,10 @@ namespace telegram_bot.WebHookSetup
 
 		public WebHookClient(ILogger<WebHookClient> logger,
 							BotConfiguration BotConfig,
-							HttpClient httpClient = null)
+							HttpClient httpClient)
 		{
 			_botConfig = BotConfig;
-			_httpClient = httpClient ?? new HttpClient();
+			_httpClient = httpClient;
 			_logger = logger;
 		}
 

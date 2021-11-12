@@ -1,10 +1,10 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using telegram_bot.Types;
-using telegram_bot.WebHookSetup;
+using TelegramBot.Types;
+using TelegramBot.WebHookSetup;
 
-namespace telegram_bot.Services
+namespace TelegramBot.Services
 {
     public class HandleUpdateService
     {
@@ -24,7 +24,7 @@ namespace telegram_bot.Services
 
             var handler = word[0] switch
             {
-                "/example" => new Context(new ExampleService()),
+                "/example" => new Context(new GetExampleService()),
                 _ => new Context(new IncorrectMessage())
             };
 

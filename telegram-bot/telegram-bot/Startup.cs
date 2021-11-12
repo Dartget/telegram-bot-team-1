@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using telegram_bot.Services;
-using telegram_bot.WebHookSetup;
+using TelegramBot.Services;
+using TelegramBot.WebHookSetup;
 
-namespace telegram_bot
+namespace TelegramBot
 {
     public class Startup
     {
@@ -29,12 +29,14 @@ namespace telegram_bot
 			//        .AddTypedClient<IWebHookClient>(client
 			//            => new WebHookClient(BotConfig, client));
 
-			services.AddHttpClient<IWebHookClient, WebHookClient>();
+			services.AddHttpClient();
+
+			services.AddScoped<IWebHookClient, WebHookClient>();
 
 			services.AddScoped<HandleUpdateService>();
 
 			services.AddSingleton(BotConfig);
-			services.AddSingleton<Singleton>();
+			services.AddSingleton<SetupClient>();
 
 			services
 				.AddControllers()

@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using telegram_bot.Types;
-using telegram_bot.WebHookSetup;
+using TelegramBot.Types;
+using TelegramBot.WebHookSetup;
 
-namespace telegram_bot.Services
+namespace TelegramBot.Services
 {
-    public class ExampleService : IStrategy
+    public class GetExampleService : IStrategy
     {
         public async Task SendMessage(IWebHookClient client, Update update)
         {

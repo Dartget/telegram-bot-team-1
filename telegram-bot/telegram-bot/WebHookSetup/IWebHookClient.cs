@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace telegram_bot.WebHookSetup
+namespace TelegramBot.WebHookSetup
 {
 	public interface IWebHookClient
 	{

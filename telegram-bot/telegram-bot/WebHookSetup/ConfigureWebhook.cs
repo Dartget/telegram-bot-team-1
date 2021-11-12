@@ -6,38 +6,35 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace telegram_bot.WebHookSetup
+namespace TelegramBot.WebHookSetup
 {
 	public class ConfigureWebhook : IHostedService
 	{
 		private readonly ILogger<ConfigureWebhook> _logger;
-		//private readonly IServiceProvider _services;
 		private readonly BotConfiguration _botConfig;
-		private readonly Singleton _singleton;
+		private readonly SetupClient _setupClient;
 
 		public ConfigureWebhook(ILogger<ConfigureWebhook> logger,
-								/*IServiceProvider serviceProvider,*/
 								IConfiguration configuration,
-								Singleton singleton)
+								SetupClient setupClient)
 		{
 			_logger = logger;
-			//_services = serviceProvider;
 			_botConfig = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
-			_singleton = singleton;
+			_setupClient = setupClient;
 		}
 
 		public async Task StartAsync(CancellationToken cancellationToken)
 		{
 			var webhookAddress = @$"{_botConfig.HostAddress}{_botConfig.BotToken}/setWebhook?url={_botConfig.NgrokAddress}/api/BotController";
 			_logger.LogInformation($"Setting webhook:  {webhookAddress}");
-			await _singleton.SetWebhookAsync(url: webhookAddress, cancellationToken: cancellationToken);
+			await _setupClient.SetWebhookAsync(url: webhookAddress, cancellationToken: cancellationToken);
 		}
 
 		public async Task StopAsync(CancellationToken cancellationToken)
 		{
 			var webhookAddress = @$"{_botConfig.HostAddress}{_botConfig.BotToken}/deleteWebhook";
 			_logger.LogInformation("Removing webhook");
-			await _singleton.DeleteWebhookAsync(url: webhookAddress, cancellationToken: cancellationToken);
+			await _setupClient.DeleteWebhookAsync(url: webhookAddress, cancellationToken: cancellationToken);
 		}
 	}
 }
