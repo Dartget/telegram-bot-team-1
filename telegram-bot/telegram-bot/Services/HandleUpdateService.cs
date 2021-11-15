@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using telegram_bot.WebHookSetup;
+using TelegramBot.Types;
+using TelegramBot.WebHookSetup;
 
-namespace telegram_bot.Services
+namespace TelegramBot.Services
 {
     public class HandleUpdateService
     {
@@ -18,10 +19,12 @@ namespace telegram_bot.Services
 
         public async Task HandlerAsync(Update update)
         {
-            var handler = update.message.text switch
+            string message = update.Message.Text;
+            string[] word = message.Split(' ');
+
+            var handler = word[0] switch
             {
-                "/one" => new Context(new Command()),
-                "/two" => new Context(new Command()),
+                "/example" => new Context(new GetExampleService()),
                 _ => new Context(new IncorrectMessage())
             };
 

@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
-using telegram_bot.WebHookSetup;
+using TelegramBot.Types;
+using TelegramBot.WebHookSetup;
 
-namespace telegram_bot.Services
+namespace TelegramBot.Services
 {
     public interface IStrategy
     {
