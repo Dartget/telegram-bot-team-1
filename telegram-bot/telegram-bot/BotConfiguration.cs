@@ -1,4 +1,4 @@
-﻿namespace telegram_bot
+namespace TelegramBot
 {
     public class BotConfiguration
     {

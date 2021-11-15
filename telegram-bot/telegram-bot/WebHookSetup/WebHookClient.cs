@@ -1,56 +1,40 @@
-﻿using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace telegram_bot.WebHookSetup
+namespace TelegramBot.WebHookSetup
 {
-    public interface IWebHookClient
-    {
-        // funs for dev
-        Task SetWebhook(string url);
-        Task DeleteWebhook();
-        Task SendTextMessage(int chatId, string message);
-    }
+	public class WebHookClient : IWebHookClient
+	{
+		private readonly BotConfiguration _botConfig;
+		private readonly HttpClient _httpClient;
+		private readonly ILogger<WebHookClient> _logger;
 
-    public class WebHookClient : IWebHookClient
-    {
-        private const string BaseUrl = "https://api.telegram.org/bot";
+		public WebHookClient(ILogger<WebHookClient> logger,
+							BotConfiguration BotConfig,
+							HttpClient httpClient)
+		{
+			_botConfig = BotConfig;
+			_httpClient = httpClient;
+			_logger = logger;
+		}
 
-        private readonly string _baseRequestUrl;
+		public async Task SendTextMessage(int chatId, string message)
+		{
+			var Params = new Dictionary<string, string>()
+			{
+				{ "chat_id", chatId.ToString() },
+				{ "text", message }
+			};
+			string json = JsonConvert.SerializeObject(Params);
+			var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        private readonly string _token;
+			_logger.LogInformation($"Message: '{message}' was sent to chat with id: {chatId}");
 
-        private readonly HttpClient _httpClient;
-
-        public WebHookClient(string token, HttpClient httpClient = null)
-        {
-            _token = token;
-            _baseRequestUrl = $"{BaseUrl}{_token}";
-            _httpClient = httpClient ?? new HttpClient();
-        }
-
-        public async Task SetWebhook(string url)
-        {
-            await _httpClient.GetAsync(url);
-        }
-
-        public async Task DeleteWebhook()
-        {
-            await _httpClient.GetAsync(_baseRequestUrl + "/deleteWebhook");
-        }
-        public async Task SendTextMessage(int chatId, string message)
-        {
-            var Params = new Dictionary<string, string>()
-            {
-                { "chat_id", chatId.ToString() },
-                { "text", message }
-            };
-            string json = JsonConvert.SerializeObject(Params);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            await _httpClient.PostAsync(_baseRequestUrl + "/sendMessage", content);
-        }
-    }
+			await _httpClient.PostAsync(@$"{_botConfig.HostAddress}{_botConfig.BotToken}/sendMessage", content);
+		}
+	}
 }

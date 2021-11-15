@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -6,41 +6,35 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace telegram_bot.WebHookSetup
+namespace TelegramBot.WebHookSetup
 {
-    public class ConfigureWebhook : IHostedService
-    {
-        private readonly ILogger<ConfigureWebhook> _logger;
-        private readonly IServiceProvider _services;
-        private readonly BotConfiguration _botConfig;
-        private readonly string _ngrokAddress;
+	public class ConfigureWebhook : IHostedService
+	{
+		private readonly ILogger<ConfigureWebhook> _logger;
+		private readonly BotConfiguration _botConfig;
+		private readonly SetupClient _setupClient;
 
-        public ConfigureWebhook(ILogger<ConfigureWebhook> logger,
-                                IServiceProvider serviceProvider,
-                                IConfiguration configuration)
-        {
-            _logger = logger;
-            _services = serviceProvider;
-            _botConfig = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
-        }
+		public ConfigureWebhook(ILogger<ConfigureWebhook> logger,
+								IConfiguration configuration,
+								SetupClient setupClient)
+		{
+			_logger = logger;
+			_botConfig = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
+			_setupClient = setupClient;
+		}
 
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            using var scope = _services.CreateScope();
-            var botClient = scope.ServiceProvider.GetRequiredService<IWebHookClient>();
+		public async Task StartAsync(CancellationToken cancellationToken)
+		{
+			var webhookAddress = @$"{_botConfig.HostAddress}{_botConfig.BotToken}/setWebhook?url={_botConfig.NgrokAddress}/api/BotController";
+			_logger.LogInformation($"Setting webhook:  {webhookAddress}");
+			await _setupClient.SetWebhookAsync(url: webhookAddress, cancellationToken: cancellationToken);
+		}
 
-            var webhookAddress = @$"{_botConfig.HostAddress}{_botConfig.BotToken}/setWebhook?url={_botConfig.NgrokAddress}/api/BotController";
-            _logger.LogInformation("Setting webhook: ", webhookAddress);
-            await botClient.SetWebhook(url: webhookAddress);
-        }
-
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            using var scope = _services.CreateScope();
-            var botClient = scope.ServiceProvider.GetRequiredService<IWebHookClient>();
-
-            _logger.LogInformation("Removing webhook");
-            await botClient.DeleteWebhook();
-        }
-    }
+		public async Task StopAsync(CancellationToken cancellationToken)
+		{
+			var webhookAddress = @$"{_botConfig.HostAddress}{_botConfig.BotToken}/deleteWebhook";
+			_logger.LogInformation("Removing webhook");
+			await _setupClient.DeleteWebhookAsync(url: webhookAddress, cancellationToken: cancellationToken);
+		}
+	}
 }

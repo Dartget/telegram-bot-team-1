@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using telegram_bot.WebHookSetup;
+using TelegramBot.Types;
+using TelegramBot.WebHookSetup;
 
-namespace telegram_bot.Services
+namespace TelegramBot.Services
 {
     public class HandleUpdateService
     {
@@ -18,10 +19,12 @@ namespace telegram_bot.Services
 
         public async Task HandlerAsync(Update update)
         {
-            var handler = update.message.text switch
+            string message = update.Message.Text;
+            string[] word = message.Split(' ');
+
+            var handler = word[0] switch
             {
-                "/one" => new Context(new Command()),
-                "/two" => new Context(new Command()),
+                "/example" => new Context(new GetExampleService()),
                 _ => new Context(new IncorrectMessage())
             };
 
@@ -37,53 +40,8 @@ namespace telegram_bot.Services
 
         public Task HandlerErrorAsync(Exception exception)
         {
-            _logger.LogInformation("Error with HandleUpdateService: ", exception.Message);
+            _logger.LogInformation("Error with HandleUpdateService: {Message}", exception.Message);
             return Task.CompletedTask;
-        }
-    }
-
-    public interface IStrategy
-    {
-        public Task SendMessage(IWebHookClient client, Update update);
-    }
-
-    public class IncorrectMessage : IStrategy
-    {
-
-        public async Task SendMessage(IWebHookClient client, Update update)
-        {
-            string messageResponse = "incorrect message";
-            await client.SendTextMessage(update.message.chat.id, messageResponse);
-        }
-    }
-
-    public class Command : IStrategy
-    {
-        public async Task SendMessage(IWebHookClient client, Update update)
-        {
-            var action = update.message.text switch
-            {
-                "/one" => "you choice command 1",
-                "/two" => "you choice command 2"
-            };
-
-            string messageResponse = action;
-            await client.SendTextMessage(update.message.chat.id, messageResponse);
-        }
-    }
-
-    public class Context
-    {
-        public IStrategy strategy { get; set; }
-
-        public Context(IStrategy strategy)
-        {
-            this.strategy = strategy;
-        }
-
-        public async Task SendMessage(IWebHookClient client, Update update)
-        {
-            await this.strategy.SendMessage(client, update);
         }
     }
 }
