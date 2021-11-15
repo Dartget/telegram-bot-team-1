@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Movie
+namespace telegram_bot
 {
     public class MovieSearchResult
     {
@@ -16,25 +16,5 @@ namespace Movie
     public class MovieSearchResults
     {
         public IList<MovieSearchResult> results { get; set; };
-    }
-
-    public class IMDBAPIClient
-    {
-        public async static MovieSearchResults getMovieIdByTitle(string rapidApiKey, string title)
-        {
-            var client = new HttpClient();
-
-            client.DefaultRequestHeaders.Add("x-rapidapi-host", "data-imdb1.p.rapidapi.com");
-            client.DefaultRequestHeaders.Add("x-rapidapi-key", rapidApiKey);
-            var uri = new Uri($"https://data-imdb1.p.rapidapi.com/movie/imdb_id/byTitle/{title}/");
-
-            var response = await client.GetAsync(uri);
-
-            JObject s = JObject.Parse(response);
-            MovieSearchResults results = JsonConvert.DeserializeObject<MovieSearchResults>(s);
-            Console.WriteLine(results.results[0].imdb_id);
-
-            return MovieSearchResults;
-        }
     }
 }
