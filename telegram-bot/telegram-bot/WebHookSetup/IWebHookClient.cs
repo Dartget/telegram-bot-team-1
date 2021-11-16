@@ -1,5 +1,7 @@
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+
 
 namespace TelegramBot.WebHookSetup
 {
@@ -7,5 +9,6 @@ namespace TelegramBot.WebHookSetup
 	{
 		// funs for dev
 		Task SendTextMessage(int chatId, string message);
+		Task<HttpResponseMessage> GetMovieIdByTitle(string title);
 	}
 }
