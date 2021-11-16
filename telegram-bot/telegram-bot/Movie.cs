@@ -7,14 +7,9 @@ using Newtonsoft.Json;
 
 namespace telegram_bot
 {
-    public class MovieSearchResult
+    public class MovieResult
     {
-        public string imdb_id { get; set; };
-        public string title { get; set; };
-    }
-
-    public class MovieSearchResults
-    {
-        public IList<MovieSearchResult> results { get; set; };
+        public string ImdbId { get; set; };
+        public string Title { get; set; };
     }
 }

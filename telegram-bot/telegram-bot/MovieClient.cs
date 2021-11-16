@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 
 namespace telegram_bot
 {
@@ -25,22 +27,31 @@ namespace telegram_bot
             client = new HttpClient();
         }
 
-        public async MovieSearchResults getMovieIdByTitle(string title)
+        public async IList<MovieResult> getMovieIdByTitle(string title)
         {
-            client.DefaultRequestHeaders.Add("x-rapidapi-host", "data-imdb1.p.rapidapi.com");
-            client.DefaultRequestHeaders.Add("x-rapidapi-key", RapidApiKey);
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{ImdbApiUrl}{title}/"),
+                Headers =
+                {
+                    { "x-rapidapi-host", "data-imdb1.p.rapidapi.com" },
+                    { "x-rapidapi-key", RapidApiKey },
+                },
+            };
+            using (var response = await client.SendAsync(request))
+            {
+                JObject movieSearch = JObject.Parse(await response.Content.ReadAsStringAsync());
+                JEnumerable<JToken> results = movieSearch["results"].Children();
+                IList<MovieResult> movieResults = new List<MovieResult>();
 
-            var uri = new Uri($"{ImdbApiUrl}{title}/");
-            var response = await client.GetAsync(uri);
+                foreach (JToken result in results)
+                {
+                    MovieResult movieResult = result.ToObject<MovieResult>();
+                    movieResults.Add(movieResult);
+                }
 
-            JObject jsonResponse = JObject.Parse(response);
-            MovieSearchResults deserializedJsonResponse = JsonConvert.DeserializeObject<MovieSearchResults>(jsonResponse);
-
-            if (deserializedJsonResponse != null) {
-                // Console.WriteLine(deserializedJsonResponse.results[0].imdb_id);
-                return deserializedJsonResponse;
-            } else {
-                return new MovieSearchResult();
+                return movieResults;
             }
         }
     }
