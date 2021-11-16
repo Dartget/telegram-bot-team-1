@@ -17,16 +17,16 @@ namespace telegram_bot
     {
         public string RapidApiKey { get; }
         public string ImdbApiUrl { get; }
+		private HttpClient client;
 
         ImdbApiClient(string rapidApiKey, string imdbApiUrl) {
             RapidApiKey = rapidApiKey;
             ImdbApiUrl = imdbApiUrl;
+            client = new HttpClient();
         }
 
         public async MovieSearchResults getMovieIdByTitle(string title)
         {
-            var client = new HttpClient();
-
             client.DefaultRequestHeaders.Add("x-rapidapi-host", "data-imdb1.p.rapidapi.com");
             client.DefaultRequestHeaders.Add("x-rapidapi-key", RapidApiKey);
 
@@ -35,8 +35,9 @@ namespace telegram_bot
 
             JObject jsonResponse = JObject.Parse(response);
             MovieSearchResults deserializedJsonResponse = JsonConvert.DeserializeObject<MovieSearchResults>(jsonResponse);
+
             if (deserializedJsonResponse != null) {
-                Console.WriteLine(deserializedJsonResponse.results[0].imdb_id);
+                // Console.WriteLine(deserializedJsonResponse.results[0].imdb_id);
                 return deserializedJsonResponse;
             } else {
                 return new MovieSearchResult();
