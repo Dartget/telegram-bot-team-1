@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TelegramBot.Services;
+using TelegramBot.WebHookSetup;
 
-namespace telegram_bot
+namespace TelegramBot
 {
     public class Startup
     {
@@ -25,10 +23,25 @@ namespace telegram_bot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddControllers()
-                .AddNewtonsoftJson();
-        }
+            services.AddHostedService<ConfigureWebhook>();
+
+			//services.AddHttpClient("telWebHook")
+			//        .AddTypedClient<IWebHookClient>(client
+			//            => new WebHookClient(BotConfig, client));
+
+			services.AddHttpClient();
+
+			services.AddScoped<IWebHookClient, WebHookClient>();
+
+			services.AddScoped<HandleUpdateService>();
+
+			services.AddSingleton(BotConfig);
+			services.AddSingleton<SetupClient>();
+
+			services
+				.AddControllers()
+				.AddNewtonsoftJson();
+		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -44,7 +57,7 @@ namespace telegram_bot
             app.UseEndpoints(endpoints =>
             {
                 //var token = BotConfig.BotToken;
-                //endpoints.MapControllerRoute(name: "tgwebhook",
+                //endpoints.MapControllerRoute(name: "telWebHook",
                 //                             pattern: $"bot/{token}",
                 //                             new { controller = "BotController", action = "Post" });
                 endpoints.MapControllers();
