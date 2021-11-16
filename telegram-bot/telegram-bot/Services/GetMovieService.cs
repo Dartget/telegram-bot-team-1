@@ -33,7 +33,7 @@ namespace TelegramBot.Services.GetMovieService
 			var answer = response.Result;
 			var u = FormatToJSON(answer.ToString());
 			JObject ds =JObject.Parse(u);
-			MovieSearchResults deserializedJsonResponse = JsonConvert.DeserializeObject<MovieSearchResults>(ds);
+			MovieSearchResults deserializedJsonResponse = JsonConvert.DeserializeObject<MovieSearchResults>((string) ds);
 			if (deserializedJsonResponse != null)
 			{
 				messageResponse = u;				
