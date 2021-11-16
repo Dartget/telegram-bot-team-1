@@ -12,11 +12,11 @@ namespace TelegramBot.WebHookSetup
 	{
 		private readonly ILogger<ConfigureWebhook> _logger;
 		private readonly BotConfiguration _botConfig;
-		private readonly SetupClient _setupClient;
+		private readonly ISetupClient _setupClient;
 
 		public ConfigureWebhook(ILogger<ConfigureWebhook> logger,
 								IConfiguration configuration,
-								SetupClient setupClient)
+								ISetupClient setupClient)
 		{
 			_logger = logger;
 			_botConfig = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
