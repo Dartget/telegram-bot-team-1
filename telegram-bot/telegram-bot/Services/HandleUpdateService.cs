@@ -30,7 +30,7 @@ namespace TelegramBot.Services
             {
                 "/example" => new Context(new GetExampleService()),
                 "/GetMovie" => new Context(new GetMvie()),
-                //"/GetWeather" => new Context(new GetWeather()),
+                "/GetWeather" => new Context(new WeatherService(word, _botConfig)),
                 _ => new Context(new IncorrectMessage())
              };
 
