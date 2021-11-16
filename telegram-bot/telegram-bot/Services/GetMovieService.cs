@@ -40,7 +40,7 @@ namespace TelegramBot.Services.GetMovieService
 			}
 			else
 			{
-				messageResponse ="фильм не нашли нахуй";			
+				messageResponse ="извините пожалуйста, по вашему запросу ничего ек найдено";
 			}
 			await client.SendTextMessage(update.Message.Chat.Id, messageResponse); 
 		}
