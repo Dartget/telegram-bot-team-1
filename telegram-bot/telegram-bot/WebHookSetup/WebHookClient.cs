@@ -69,7 +69,7 @@ namespace TelegramBot.WebHookSetup
 					movieResults.Add(movieResult);
 				}
 				return movieResults;
-			}			
+			}
 		}
 		public WeatherResponse GetWeatgerByCity(string city)
 		{
@@ -88,6 +88,30 @@ namespace TelegramBot.WebHookSetup
 			WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(response);
 
 			return weatherResponse;
+		}
+
+		public async Task<Movie> GetMovieDetailsByImdbId(string imdbId)
+		{
+			var request = new HttpRequestMessage
+			{
+				Method = HttpMethod.Get,
+				RequestUri = new Uri($"{_botConfig.ImdbDetailsApiUrl}{imdbId}/"),
+				Headers =
+				{
+					{ "x-rapidapi-host", "data-imdb1.p.rapidapi.com"},
+					{ "x-rapidapi-key", _botConfig.RapidApiKey},
+				},
+			};
+            using (var response = await _httpClient.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+
+                JToken jsonContent = JObject.Parse(await response.Content.ReadAsStringAsync());
+                JToken results = jsonContent["results"];
+                Movie movie = results.ToObject<Movie>();
+
+				return movie;
+			}
 		}
 	}
 }
