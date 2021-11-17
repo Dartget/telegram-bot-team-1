@@ -1,66 +1,27 @@
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using TelegramBot.WebHookSetup;
 using TelegramBot.Types;
-using Newtonsoft.Json.Linq;
-using System;
 
-namespace TelegramBot.Services.GetMovieService
+
+namespace TelegramBot.Services.GetMovie
 {
-    public class GetMvie : IStrategy
-	{
-	/*
-        private readonly IWebHookClient _client;
-        private readonly BotConfiguration _botConfig;
-        private readonly string _title;
-
-        public GetMovieService(BotConfiguration botConfig, string[] title, IWebHookClient client)
-        {
-            _botConfig = botConfig;
-            _title= String.Join(" ", title);
-            _client = client;
-        }
-		*/
-	
+    public class GetMovieService : IStrategy
+	{	
 		public async Task SendMessage(IWebHookClient client, Update update)
 		{
 			string title = update.Message.Text;
 			string[] word = title.Split(' ');
 			string messageResponse;
-			var response = client.GetMovieIdByTitle(word[1]);
-			
-
-			var answer = response.Result;
-			var u = FormatToJSON(answer.ToString());
-			JObject ds =JObject.Parse(u);
-			MovieSearchResults deserializedJsonResponse = JsonConvert.DeserializeObject<MovieSearchResults>((string) ds);
-			if (deserializedJsonResponse != null)
-			{
-				messageResponse = u;				
-			}
-			else
-			{
-				messageResponse ="извините пожалуйста, по вашему запросу ничего ек найдено";
-			}
-			await client.SendTextMessage(update.Message.Chat.Id, messageResponse); 
-		}
-
-       
-		static string FormatToJSON(string json)
-        {
-            try
+            if (word.Length > 1)
             {
-                object dontBeJSON = JsonConvert.DeserializeObject(json);
-                string beJSON = JsonConvert.SerializeObject(dontBeJSON, Formatting.Indented);
-
-
-
-                return beJSON;
+                var results = await client.GetMovieIdByTitle(word[1]);                
+                messageResponse = $"Movie: {results[0].Title}";                
             }
-            catch
+            else
             {
-                return "ERROR_WITH_METHOD_FormatToJSON";
+                messageResponse = "Введите название фильма после команды /getmovie";
             }
+            await client.SendTextMessage(update.Message.Chat.Id, messageResponse);
         }
     }
 
