@@ -1,11 +1,9 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using TelegramBot.Services.GetMovieService;
 using TelegramBot.Types;
 using TelegramBot.WebHookSetup;
-using TelegramBot.Services.Weather;
-
+using TelegramBot.Services.GetMovie;
 namespace TelegramBot.Services
 {
     public class HandleUpdateService
@@ -30,8 +28,8 @@ namespace TelegramBot.Services
             var handler = word[0] switch
             {
                 "/example" => new Context(new GetExampleService()),
-                "/GetMovie" => new Context(new GetMvie()),
-                "/GetWeather" => new Context(new WeatherService(word, _botConfig)),
+                "/getmovie" => new Context(new GetMovieService()),
+                //"/getweather" => new Context(new GetWeather(_botConfig)),
                 _ => new Context(new IncorrectMessage())
              };
 
