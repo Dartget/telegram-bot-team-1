@@ -37,8 +37,8 @@ namespace TelegramBot
 
             services.AddScoped<HandleUpdateService>();
 
-            services.AddSingleton(BotConfig);
-            services.AddSingleton< SetupClient>();
+			      services.AddSingleton(BotConfig);
+			      services.AddSingleton<ISetupClient, SetupClient>();
 
             services
                 .AddControllers()

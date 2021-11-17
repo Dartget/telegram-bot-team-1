@@ -19,21 +19,27 @@ namespace TelegramBot.Services
             _botConfig = botConfig;
         }
 
-        public async Task HandlerAsync(Update update)
-        {
-            
-            string message = update.Message.Text;
-            string[] word = message.Split(' ');
-            
-            var handler = word[0] switch
-            {
-                "/example" => new Context(new GetExampleService()),
-                "/getmovie" => new Context(new GetMovieService()),
-                //"/getweather" => new Context(new GetWeather(_botConfig)),
-                _ => new Context(new IncorrectMessage())
-             };
 
-            try
+		public Context CreateContext(Update update)
+		{
+			string message = update.Message.Text;
+			string[] word = message.Split(' ');
+
+			var handler = word[0] switch
+			{
+				"/example" => new Context(new GetExampleService()),
+        "/getmovie" => new Context(new GetMovieService()),
+        //"/getweather" => new Context(new GetWeather(_botConfig)),
+				_ => new Context(new GetIncorrectMessage())
+			};
+			return handler;
+		}
+
+		public async Task HandlerAsync(Update update)
+        {
+			var handler = CreateContext(update);
+
+			try
             {
                 await handler.SendMessage(_botClient, update);
             }
