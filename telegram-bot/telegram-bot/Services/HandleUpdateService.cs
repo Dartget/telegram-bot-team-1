@@ -3,7 +3,9 @@ using System;
 using System.Threading.Tasks;
 using TelegramBot.Types;
 using TelegramBot.WebHookSetup;
+using TelegramBot.Services.Weather;
 using TelegramBot.Services.GetMovie;
+
 namespace TelegramBot.Services
 {
     public class HandleUpdateService
@@ -29,7 +31,7 @@ namespace TelegramBot.Services
 			{
 				"/example" => new Context(new GetExampleService()),
         "/getmovie" => new Context(new GetMovieService()),
-        //"/getweather" => new Context(new GetWeather(_botConfig)),
+        "/getweather" => new Context(new WeatherService(word, _botConfig)),
 				_ => new Context(new GetIncorrectMessage())
 			};
 			return handler;
