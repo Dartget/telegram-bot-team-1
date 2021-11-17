@@ -7,7 +7,7 @@ using TelegramBot.WebHookSetup;
 using TelegramBot.Types;
 namespace TelegramBot.Services.Weather
 {
-    class WeatherService : IStrategy
+    public class WeatherService : IStrategy
     {
         static string name_city; // название города
         static float temperature_in_city; //температура
@@ -27,25 +27,24 @@ namespace TelegramBot.Services.Weather
 			_botConfig = botConfig;
 		}
         
-
-
-        public async Task SendMessage(IWebHookClient client, Update update)
+        public static string OneOrMore(string[] message)
         {
-					
-			if (_a.Length < 3)
+            name_city = null;
+            if (message.Length < 3)
 			{
-				name_city = _a[1];
-
+				name_city = message[1];
 			}
 			else
 			{
-				name_city = _a[1] + " " + _a[2];
+                for (int i = 1; i < message.Length; i++) name_city += (message[i] + " ");
+                name_city = name_city.TrimEnd(' ');
 			}
-			
-			
+            return name_city;
+        }
 
-
-			Weather(name_city);
+        public async Task SendMessage(IWebHookClient client, Update update)
+        {
+			Weather(OneOrMore(_a));
 
             await client.SendTextMessage(update.Message.Chat.Id, $"Статистика по городу {name_of_city} на {Data(date_and_time)}\nТемпература: {Math.Round(temperature_in_city)} °C \n Ощущается как: {Math.Round(temperature_feeling, 1)} °C\n Скорость ветра: {wind_speed}");
 
