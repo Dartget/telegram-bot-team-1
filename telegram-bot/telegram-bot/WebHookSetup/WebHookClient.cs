@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System;
 using Microsoft.AspNetCore.Mvc;
+using TelegramBot.Services.GetMovie;
 
 namespace TelegramBot.WebHookSetup
 {
@@ -39,19 +40,33 @@ namespace TelegramBot.WebHookSetup
 
 			await _httpClient.PostAsync(@$"{_botConfig.HostAddress}{_botConfig.BotToken}/sendMessage", content);
 		}
-		public async Task<HttpResponseMessage> GetMovieIdByTitle(string title)
+		public async Task<IList<MovieResult>> GetMovieIdByTitle(string title)
 		{
-			
+			var request = new HttpRequestMessage
+			{
+				Method = HttpMethod.Get,
+				RequestUri = new Uri($"{_botConfig.ImdbApiUrl}{title}/"),
+				Headers =
+				{
+					{ "x-rapidapi-host", "data-imdb1.p.rapidapi.com"},
+					{ "x-rapidapi-key", _botConfig.RapidApiKey},
+				},
+			};
+			_logger.LogInformation($"Request to movie api {request}");
 
-			_httpClient.DefaultRequestHeaders.Add("x-rapidapi-host", "data-imdb1.p.rapidapi.com");
-			_httpClient.DefaultRequestHeaders.Add("x-rapidapi-key", _botConfig.RapidApiKey);
+			using (var response = await _httpClient.SendAsync(request))
+			{
+				JObject movieSearch = JObject.Parse(await response.Content.ReadAsStringAsync());
+				JEnumerable<JToken> results = movieSearch["results"].Children();
+				IList<MovieResult> movieResults = new List<MovieResult>();
 
-			var uri = new Uri($"{_botConfig.ImdbApiUrl}{title}/");
-			_logger.LogInformation($"Message: '{uri}' was sent to chat with id:");
-			//var uuu = _httpClient.GetAsync(uri);
-			//var response = await _httpClient.GetAsync(uri);
-			return await _httpClient.GetAsync(uri);
-			//Error with HandleUpdateService: Unexpected character encountered while parsing value: S.Path '', line 0, position 0.
+				foreach (JToken result in results)
+				{
+					MovieResult movieResult = result.ToObject<MovieResult>();
+					movieResults.Add(movieResult);
+				}
+				return movieResults;
+			}			
 		}
 	}
 }
