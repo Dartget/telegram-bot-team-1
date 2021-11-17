@@ -12,13 +12,11 @@ namespace TelegramBot.Services
     {
         private readonly IWebHookClient _botClient;
         private readonly ILogger<HandleUpdateService> _logger;
-        private readonly BotConfiguration _botConfig;
 
-        public HandleUpdateService(IWebHookClient botClient, ILogger<HandleUpdateService> logger, BotConfiguration botConfig)
+        public HandleUpdateService(IWebHookClient botClient, ILogger<HandleUpdateService> logger)
         {
             _botClient = botClient;
             _logger = logger;
-            _botConfig = botConfig;
         }
 
 
@@ -30,8 +28,8 @@ namespace TelegramBot.Services
 			var handler = word[0] switch
 			{
 				"/example" => new Context(new GetExampleService()),
-        "/getmovie" => new Context(new GetMovieService()),
-        "/getweather" => new Context(new WeatherService(word, _botConfig)),
+				"/getmovie" => new Context(new GetMovieService()),
+				"/getweather" => new Context(new WeatherService()),
 				_ => new Context(new GetIncorrectMessage())
 			};
 			return handler;

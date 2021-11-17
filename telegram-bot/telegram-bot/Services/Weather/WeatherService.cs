@@ -1,10 +1,8 @@
-using Newtonsoft.Json;
 using System;
-using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using TelegramBot.WebHookSetup;
 using TelegramBot.Types;
+
 namespace TelegramBot.Services.Weather
 {
     public class WeatherService : IStrategy
@@ -17,17 +15,7 @@ namespace TelegramBot.Services.Weather
         static string wind_speed; // скорость ветра
         static int date_and_time;
 
-		private readonly BotConfiguration _botConfig;
-
-		static string[] _a;
-
-        public WeatherService(string[] a, BotConfiguration botConfig)
-        {
-            _a = a;
-			_botConfig = botConfig;
-		}
-        
-        public static string OneOrMore(string[] message)
+		public static string OneOrMore(string[] message)
         {
             name_city = null;
             if (message.Length < 3)
@@ -44,24 +32,14 @@ namespace TelegramBot.Services.Weather
 
         public async Task SendMessage(IWebHookClient client, Update update)
         {
-			Weather(OneOrMore(_a));
+			Weather(OneOrMore(update.Message.Text.Split(' ')), client);
 
             await client.SendTextMessage(update.Message.Chat.Id, $"Статистика по городу {name_of_city} на {Data(date_and_time)}\nТемпература: {Math.Round(temperature_in_city)} °C \n Ощущается как: {Math.Round(temperature_feeling, 1)} °C\n Скорость ветра: {wind_speed}");
 
         }
-        public  void Weather(string cityName)
+        public void Weather(string cityName, IWebHookClient client)
         {
-
-            string url = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&unit=metric&appid="+ _botConfig.WeatherToken + "&lang=ru";
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);                                 
-HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest?.GetResponse();
-            string response;        
-
-            using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
-            {
-                response = streamReader.ReadToEnd();
-            }
-            WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(response);
+            WeatherResponse weatherResponse = client.GetWeatgerByCity(cityName);
 
             name_of_city = weatherResponse.Name;
             temperature_in_city = weatherResponse.Main.Temp - 273;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TelegramBot.Services.GetMovie;
+using TelegramBot.Services.Weather;
 
 namespace TelegramBot.WebHookSetup
 {
@@ -9,5 +10,6 @@ namespace TelegramBot.WebHookSetup
 		// funs for dev
 		Task SendTextMessage(int chatId, string message);
 		Task<IList<MovieResult>> GetMovieIdByTitle(string title);
+		public WeatherResponse GetWeatgerByCity(string city);
 	}
 }

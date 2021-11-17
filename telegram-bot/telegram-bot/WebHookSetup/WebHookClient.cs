@@ -7,8 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System;
-using Microsoft.AspNetCore.Mvc;
 using TelegramBot.Services.GetMovie;
+using TelegramBot.Services.Weather;
+using System.Net;
+using System.IO;
 
 namespace TelegramBot.WebHookSetup
 {
@@ -68,6 +70,24 @@ namespace TelegramBot.WebHookSetup
 				}
 				return movieResults;
 			}			
+		}
+		public WeatherResponse GetWeatgerByCity(string city)
+		{
+			string url = $"{_botConfig.WeatherApiUrl}{city}&unit=metric&appid={_botConfig.WeatherToken}&lang=ru";
+			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+			HttpWebResponse httpWebResponse =(HttpWebResponse)httpWebRequest?.GetResponse();
+			string response;
+
+			using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+			{
+				response = streamReader.ReadToEnd();
+			}
+
+			_logger.LogInformation($"Request to weather api {response}");
+
+			WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(response);
+
+			return weatherResponse;
 		}
 	}
 }

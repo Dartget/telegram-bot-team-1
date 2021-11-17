@@ -13,7 +13,7 @@ namespace TelegramBot.Services.Weather
         public string Name { get; set; }
 
         [JsonProperty(Required = Required.Always)]
-        public Window Wind {get;set;}
+        public Wind Wind {get;set;}
 
         [JsonProperty(Required = Required.Always)]
         public int DT{get;set;}
