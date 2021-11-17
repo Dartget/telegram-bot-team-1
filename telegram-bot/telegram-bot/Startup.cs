@@ -10,6 +10,8 @@ namespace TelegramBot
 {
     public class Startup
     {
+        
+       
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,23 +27,23 @@ namespace TelegramBot
         {
             services.AddHostedService<ConfigureWebhook>();
 
-			//services.AddHttpClient("telWebHook")
-			//        .AddTypedClient<IWebHookClient>(client
-			//            => new WebHookClient(BotConfig, client));
+            //services.AddHttpClient("telWebHook")
+            //        .AddTypedClient<IWebHookClient>(client
+            //            => new WebHookClient(BotConfig, client));
 
-			services.AddHttpClient();
+            services.AddHttpClient();
 
-			services.AddScoped<IWebHookClient, WebHookClient>();
+            services.AddScoped<IWebHookClient, WebHookClient>();
 
-			services.AddScoped<HandleUpdateService>();
+            services.AddScoped<HandleUpdateService>();
 
-			services.AddSingleton(BotConfig);
-			services.AddSingleton<ISetupClient, SetupClient>();
+			      services.AddSingleton(BotConfig);
+			      services.AddSingleton<ISetupClient, SetupClient>();
 
-			services
-				.AddControllers()
-				.AddNewtonsoftJson();
-		}
+            services
+                .AddControllers()
+                .AddNewtonsoftJson();
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

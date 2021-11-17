@@ -3,19 +3,22 @@ using System;
 using System.Threading.Tasks;
 using TelegramBot.Types;
 using TelegramBot.WebHookSetup;
-
+using TelegramBot.Services.GetMovie;
 namespace TelegramBot.Services
 {
     public class HandleUpdateService
     {
         private readonly IWebHookClient _botClient;
         private readonly ILogger<HandleUpdateService> _logger;
+        private readonly BotConfiguration _botConfig;
 
-        public HandleUpdateService(IWebHookClient botClient, ILogger<HandleUpdateService> logger)
+        public HandleUpdateService(IWebHookClient botClient, ILogger<HandleUpdateService> logger, BotConfiguration botConfig)
         {
             _botClient = botClient;
             _logger = logger;
+            _botConfig = botConfig;
         }
+
 
 		public Context CreateContext(Update update)
 		{
@@ -25,6 +28,8 @@ namespace TelegramBot.Services
 			var handler = word[0] switch
 			{
 				"/example" => new Context(new GetExampleService()),
+        "/getmovie" => new Context(new GetMovieService()),
+        //"/getweather" => new Context(new GetWeather(_botConfig)),
 				_ => new Context(new GetIncorrectMessage())
 			};
 			return handler;
