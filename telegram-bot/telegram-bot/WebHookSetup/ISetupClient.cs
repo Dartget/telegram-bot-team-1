@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace TelegramBot.WebHookSetup
 {
-	interface ISetupClient
+	public interface ISetupClient
 	{
 		Task SetWebhookAsync(string url, CancellationToken cancellationToken);
 		Task DeleteWebhookAsync(string url, CancellationToken cancellationToken);

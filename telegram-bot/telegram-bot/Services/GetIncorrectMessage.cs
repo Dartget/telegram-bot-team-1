@@ -4,7 +4,7 @@ using TelegramBot.WebHookSetup;
 
 namespace TelegramBot.Services
 {
-    public class IncorrectMessage : IStrategy
+    public class GetIncorrectMessage : IStrategy
     {
         public async Task SendMessage(IWebHookClient client, Update update)
         {
