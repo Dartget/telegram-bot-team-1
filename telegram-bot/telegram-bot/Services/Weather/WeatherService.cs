@@ -24,7 +24,7 @@ namespace TelegramBot.Services.Weather
 			{
 				try
 				{
-					WeatherResponse weatherResponse = await client.GetWeatgerByCity(city);
+					WeatherResponse weatherResponse = await client.GetWeatherByCity(city);
 					name_of_city = weatherResponse.Name;
 					temperature_in_city = weatherResponse.Main.Temp - 273;
 					temperature_feeling = weatherResponse.Main.Feels_like - 273;

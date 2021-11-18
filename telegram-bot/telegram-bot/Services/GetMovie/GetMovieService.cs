@@ -12,6 +12,7 @@ namespace TelegramBot.Services.GetMovie
 			string title = update.Message.Text;
 			title = title.Replace("/getmovie", "").Trim(' ');
 			string messageResponse;
+			string ImdbId;
 
 			if (title != "")
             {
@@ -19,7 +20,16 @@ namespace TelegramBot.Services.GetMovie
 				if (results.Count == 0)
 					messageResponse = "Фильм не найден";
 				else
-					messageResponse = $"Movie: {results[0].Title}";
+				{
+					ImdbId = results[0].ImdbId;
+					var details = await client.GetMovieDetailsByImdbId(ImdbId);
+					messageResponse =
+						$"Movie: {results[0].Title} {details.Year}\n\n" +
+						$"Description: {details.Description}\n\n" +
+						$"Genre: {details.Gen[0].Genre}\n\n";
+					await client.SendTextMessage(update.Message.Chat.Id, details.ImageUrl);
+				}
+					
             }
             else
             {

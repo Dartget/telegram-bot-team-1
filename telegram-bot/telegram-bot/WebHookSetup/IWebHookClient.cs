@@ -10,6 +10,7 @@ namespace TelegramBot.WebHookSetup
 		// funs for dev
 		Task SendTextMessage(int chatId, string message);
 		Task<IList<MovieResult>> GetMovieIdByTitle(string title);
-		Task<WeatherResponse> GetWeatgerByCity(string city);
+		Task<WeatherResponse> GetWeatherByCity(string city);
+		Task<Movie> GetMovieDetailsByImdbId(string imdbId);
 	}
 }
