@@ -72,7 +72,7 @@ namespace TelegramBot.WebHookSetup
 			}
 		}
 
-		public async Task<WeatherResponse> GetWeatgerByCity(string city)
+		public async Task<WeatherResponse> GetWeatherByCity(string city)
 		{
 			string url = $"{_botConfig.WeatherApiUrl}{city}&unit=metric&appid={_botConfig.WeatherToken}&lang=ru";
 			/*HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -99,7 +99,8 @@ namespace TelegramBot.WebHookSetup
 					{ "x-rapidapi-key", _botConfig.RapidApiKey},
 				},
 			};
-            using (var response = await _httpClient.SendAsync(request))
+			_logger.LogInformation($"Request to movie api {request}");
+			using (var response = await _httpClient.SendAsync(request))
             {
                 response.EnsureSuccessStatusCode();
 

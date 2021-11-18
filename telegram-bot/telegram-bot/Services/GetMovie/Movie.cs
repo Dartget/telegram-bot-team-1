@@ -1,13 +1,18 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 
 namespace TelegramBot.Services.GetMovie
 {
-    public class MovieResult
+	[JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+	public class MovieResult
     {
-        public string ImdbId { get; set; }
-        public string Title { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public string ImdbId { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public string Title { get; set; }
     }
-
+	
 	public class MovieGenre
     {
         public int Id { get; set; }
@@ -19,15 +24,22 @@ namespace TelegramBot.Services.GetMovie
         public int Id { get; set; }
         public string Keyword { get; set; }
     }
-
-    public class Movie
+	[JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+	public class Movie
     {
-        public string Description { get; set; }
-        public string Popularity { get; set; }
-        public string Year { get; set; }
-        public string MovieLength { get; set; }
-        public string ImageUrl { get; set; }
-        public IList<MovieGenre> Gen { get; set; }
-        public IList<MovieKeyword> Keywords { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public string Description { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public string Popularity { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public string Year { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public string MovieLength { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public string ImageUrl { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public IList<MovieGenre> Gen { get; set; }
+		[JsonProperty(Required = Required.Always)]
+		public IList<MovieKeyword> Keywords { get; set; }
     }
 }
