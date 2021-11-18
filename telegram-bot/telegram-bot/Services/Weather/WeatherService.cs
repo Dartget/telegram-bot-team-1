@@ -7,7 +7,7 @@ namespace TelegramBot.Services.Weather
 {
     public class WeatherService : IStrategy
     {
-        static string name_city; // название города
+
         static float temperature_in_city; //температура
         static string name_of_city; //название города для вывода
 
@@ -15,39 +15,39 @@ namespace TelegramBot.Services.Weather
         static string wind_speed; // скорость ветра
         static int date_and_time;
 
-		public static string OneOrMore(string[] message)
-        {
-            name_city = null;
-            if (message.Length < 3)
-			{
-				name_city = message[1];
-			}
-			else
-			{
-                for (int i = 1; i < message.Length; i++) name_city += (message[i] + " ");
-                name_city = name_city.TrimEnd(' ');
-			}
-            return name_city;
-        }
-
         public async Task SendMessage(IWebHookClient client, Update update)
         {
-			Weather(OneOrMore(update.Message.Text.Split(' ')), client);
+			string city = update.Message.Text;
+			city = city.Replace("/getweather", "").Trim(' ');
+			string messageResponse;
+			if (city != "")
+			{
+				try
+				{
+					WeatherResponse weatherResponse = await client.GetWeatherByCity(city);
+					name_of_city = weatherResponse.Name;
+					temperature_in_city = weatherResponse.Main.Temp - 273;
+					temperature_feeling = weatherResponse.Main.Feels_like - 273;
+					wind_speed = weatherResponse.Wind.Speed;
+					date_and_time = weatherResponse.DT;
+					messageResponse =
+						$"Статистика по городу {name_of_city} на {Data(date_and_time)}\n" +
+						$"Температура: {Math.Round(temperature_in_city)}°C \n " +
+						$"Ощущается как: {Math.Round(temperature_feeling, 1)}°C\n" +
+						$"Скорость ветра: {wind_speed}";
+				}
+				catch (Exception)
+				{
+					messageResponse = $"Город {city} не найден ";
+				}
 
-            await client.SendTextMessage(update.Message.Chat.Id, $"Статистика по городу {name_of_city} на {Data(date_and_time)}\nТемпература: {Math.Round(temperature_in_city)} °C \n Ощущается как: {Math.Round(temperature_feeling, 1)} °C\n Скорость ветра: {wind_speed}");
+			}
+			else
+				messageResponse = "Введите название города после /getweather";
 
-        }
-        public void Weather(string cityName, IWebHookClient client)
-        {
-            WeatherResponse weatherResponse = client.GetWeatgerByCity(cityName);
+			await client.SendTextMessage(update.Message.Chat.Id, messageResponse);
+		}
 
-            name_of_city = weatherResponse.Name;
-            temperature_in_city = weatherResponse.Main.Temp - 273;
-            temperature_feeling = weatherResponse.Main.Feels_like - 273;
-            wind_speed = weatherResponse.Wind.Speed;
-            date_and_time = weatherResponse.DT;
-
-        }
 
         public static string Data(int D)
         {

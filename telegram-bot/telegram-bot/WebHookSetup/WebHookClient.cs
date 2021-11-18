@@ -69,25 +69,47 @@ namespace TelegramBot.WebHookSetup
 					movieResults.Add(movieResult);
 				}
 				return movieResults;
-			}			
+			}
 		}
-		public WeatherResponse GetWeatgerByCity(string city)
+
+		public async Task<WeatherResponse> GetWeatherByCity(string city)
 		{
 			string url = $"{_botConfig.WeatherApiUrl}{city}&unit=metric&appid={_botConfig.WeatherToken}&lang=ru";
-			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-			HttpWebResponse httpWebResponse =(HttpWebResponse)httpWebRequest?.GetResponse();
-			string response;
+			/*HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+			HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest?.GetResponse();*/
+			var response = await _httpClient.GetAsync(url);
+			response.EnsureSuccessStatusCode();
 
-			using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
-			{
-				response = streamReader.ReadToEnd();
-			}
+			_logger.LogInformation($"Request to weather api {url}");
 
-			_logger.LogInformation($"Request to weather api {response}");
-
-			WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(response);
+			WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(response.Content.ReadAsStringAsync().Result);
 
 			return weatherResponse;
+		}
+
+		public async Task<Movie> GetMovieDetailsByImdbId(string imdbId)
+		{
+			var request = new HttpRequestMessage
+			{
+				Method = HttpMethod.Get,
+				RequestUri = new Uri($"{_botConfig.ImdbDetailsApiUrl}{imdbId}/"),
+				Headers =
+				{
+					{ "x-rapidapi-host", "data-imdb1.p.rapidapi.com"},
+					{ "x-rapidapi-key", _botConfig.RapidApiKey},
+				},
+			};
+			_logger.LogInformation($"Request to movie api {request}");
+			using (var response = await _httpClient.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+
+                JToken jsonContent = JObject.Parse(await response.Content.ReadAsStringAsync());
+                JToken results = jsonContent["results"];
+                Movie movie = results.ToObject<Movie>();
+
+				return movie;
+			}
 		}
 	}
 }

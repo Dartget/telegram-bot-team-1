@@ -8,7 +8,7 @@ namespace TelegramBot.Services
     {
         public async Task SendMessage(IWebHookClient client, Update update)
         {
-            string messageResponse = "incorrect message";
+            string messageResponse = "Несуществующая комманда, для просмотра всех возможных команд напишите /help";
             await client.SendTextMessage(update.Message.Chat.Id, messageResponse);
         }
     }

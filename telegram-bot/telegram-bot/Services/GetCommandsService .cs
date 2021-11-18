@@ -6,11 +6,14 @@ using TelegramBot.WebHookSetup;
 
 namespace TelegramBot.Services
 {
-    public class GetExampleService : IStrategy
+    public class GetCommandsService : IStrategy
     {
         public async Task SendMessage(IWebHookClient client, Update update)
         {
-            string messageResponse = "this message is an example of a response";
+            string messageResponse = "Доступные команды\n" +
+				"/getmovie <название фильма>\n" +
+				"/getweather <название городв>\n"
+				;
             await client.SendTextMessage(update.Message.Chat.Id, messageResponse);
         }
     }
