@@ -12,10 +12,9 @@ namespace TelegramBot.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromServices] HandleUpdateService handleUpdateService, [FromBody] Update update)
         {
-            if (update.Message != null)
-                await handleUpdateService.HandlerAsync(update);
-
-            return Ok();
+			if (update.Message != null)
+				await handleUpdateService.HandlerAsync(update);
+			return Ok();
         }
     }
 }

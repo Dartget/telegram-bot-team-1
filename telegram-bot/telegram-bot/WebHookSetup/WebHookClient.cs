@@ -71,21 +71,18 @@ namespace TelegramBot.WebHookSetup
 				return movieResults;
 			}
 		}
-		public WeatherResponse GetWeatgerByCity(string city)
+
+		public async Task<WeatherResponse> GetWeatgerByCity(string city)
 		{
 			string url = $"{_botConfig.WeatherApiUrl}{city}&unit=metric&appid={_botConfig.WeatherToken}&lang=ru";
-			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-			HttpWebResponse httpWebResponse =(HttpWebResponse)httpWebRequest?.GetResponse();
-			string response;
+			/*HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+			HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest?.GetResponse();*/
+			var response = await _httpClient.GetAsync(url);
+			response.EnsureSuccessStatusCode();
 
-			using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
-			{
-				response = streamReader.ReadToEnd();
-			}
+			_logger.LogInformation($"Request to weather api {url}");
 
-			_logger.LogInformation($"Request to weather api {response}");
-
-			WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(response);
+			WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(response.Content.ReadAsStringAsync().Result);
 
 			return weatherResponse;
 		}

@@ -1,9 +1,8 @@
-using TelegramBot.Services.Weather;
 using Xunit;
 
 namespace TelegramBotTests
 {
-    public class WeatherService
+	public class WeatherService
     {
 		[Fact]
 		public void TestMethod1()

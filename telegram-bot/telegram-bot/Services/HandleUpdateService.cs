@@ -27,7 +27,9 @@ namespace TelegramBot.Services
 
 			var handler = word[0] switch
 			{
-				"/example" => new Context(new GetExampleService()),
+				"/help" => new Context(new GetCommandsService()),
+				"/start" => new Context(new GetCommandsService()),
+				"/commands" => new Context(new GetCommandsService()),
 				"/getmovie" => new Context(new GetMovieService()),
 				"/getweather" => new Context(new WeatherService()),
 				_ => new Context(new GetIncorrectMessage())
