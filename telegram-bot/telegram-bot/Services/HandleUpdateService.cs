@@ -22,7 +22,7 @@ namespace TelegramBot.Services
 
 		public Context CreateContext(Update update)
 		{
-			string message = update.Message.Text;
+			string message = update.Message.Text == null ? "/help" : update.Message.Text.Replace("@Pracctical_bot", "");
 			string[] word = message.Split(' ');
 
 			var handler = word[0] switch
